@@ -86,7 +86,7 @@
           <enum>QTabWidget::South</enum>
          </property>
          <property name="currentIndex">
-          <number>1</number>
+          <number>0</number>
          </property>
          <widget class="QWidget" name="translationsTableTab">
           <attribute name="title">
@@ -301,7 +301,7 @@
        <item>
         <widget class="QPushButton" name="gitPushButton">
          <property name="enabled">
-          <bool>false</bool>
+          <bool>true</bool>
          </property>
          <property name="minimumSize">
           <size>
@@ -664,7 +664,13 @@ p, li { white-space: pre-wrap; }
       <number>5</number>
      </property>
      <item>
-      <widget class="QListView" name="projectsListView"/>
+      <widget class="QListView" name="projectsListView">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>

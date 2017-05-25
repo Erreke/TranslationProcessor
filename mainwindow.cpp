@@ -5,9 +5,11 @@
 #include <QDomDocument>
 #include <QDebug>
 #include <QFile>
+#include <QDir>
 #include <QTextStream>
 #include <QTextCodec>
 #include <QStringList>
+#include <QStringListModel>
 #include <QVector>
 
 MainWindow::MainWindow(QWidget *parent) :
@@ -24,6 +26,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->menuView->addSeparator();
     ui->menuView->addAction(ui->appLogsDock->toggleViewAction());
     ui->appLogsDock->close();
+
+    getProjects();
 }
 
 MainWindow::~MainWindow()
@@ -38,7 +42,37 @@ void MainWindow::on_quitAction_triggered()
 
 void MainWindow::on_gitPullButton_clicked()
 {
-    loadDataIntoTable();
+    //loadDataIntoTable();
+}
+
+void MainWindow::on_gitCommitButton_clicked()
+{
+    //saveToFileFromTable();
+}
+
+void MainWindow::on_settingsAction_triggered()
+{
+    SettingsDialog settingsDialog;
+    int res = settingsDialog.exec();
+
+    if(res == 1)
+    {
+        currentLang = settingsDialog.currentLang;
+    }
+}
+
+void MainWindow::on_translationsTabs_currentChanged(int index)
+{
+    if(index == TABLE_TAB_INDEX)
+    {
+        saveToFileFromTable();
+        loadDataIntoSource();
+    }
+    else if(index == SOURCE_TAB_INDEX)
+    {
+        saveToFileFromSource();
+        loadDataIntoTable();
+    }
 }
 
 void MainWindow::loadDataIntoTable()
@@ -66,7 +100,7 @@ void MainWindow::loadDataIntoTable()
             if (currentLangData[j].key == baseLangData[i].key)
             {
                 QTableWidgetItem *currentLangItem = new QTableWidgetItem();
-                currentLangItem->setText(QString::number(currentLangData[j].id) + ": " + currentLangData[j].value);
+                currentLangItem->setText(currentLangData[j].value);
                 ui->translationsTable->setItem(i, 1, currentLangItem);
             }
         }
@@ -77,6 +111,45 @@ void MainWindow::loadDataIntoTable()
     ui->translationsTable->setVerticalHeaderLabels(verticalHeaders);
     ui->translationsTable->setHorizontalHeaderLabels(horizontalHeaders);
     ui->translationsTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Stretch);
+}
+
+void MainWindow::loadDataIntoSource()
+{
+    QFile file("global." + currentLang + ".xliff");
+    if (!file.open(QIODevice::ReadOnly)) {
+        qDebug() << "Не могу открыть файл";
+        return;
+    }
+
+    QTextStream ReadFile(&file);
+    ui->translationsSourceTextEdit->setText(ReadFile.readAll());
+}
+
+void MainWindow::saveToFileFromTable()
+{
+    QFile file("global." + currentLang + ".xliff");
+
+    if (file.open(QFile::WriteOnly | QFile::Truncate)) {
+        QTextStream out(&file);
+
+        out.setCodec("UTF-8");
+        out << composeXliffHeader(currentLang);
+
+        int count = ui->translationsTable->rowCount();
+        for (int row = 0 ; row < count ; ++row) {
+            out << composeXliffBody(row, 1);
+        }
+
+        out << composeXliffFooter();
+        out.flush();
+    }
+
+    file.close();
+}
+
+void MainWindow::saveToFileFromSource()
+{
+
 }
 
 QVector<LangData> MainWindow::getXliffData(QString lang)
@@ -95,9 +168,6 @@ QVector<LangData> MainWindow::getXliffData(QString lang)
         file.close();
         return xliffData;
     }
-
-    QTextStream ReadFile(&file);
-    ui->translationsSourceTextEdit->setText(ReadFile.readAll());
 
     file.close();
 
@@ -127,33 +197,6 @@ QVector<LangData> MainWindow::getXliffData(QString lang)
     return xliffData;
 }
 
-void MainWindow::on_gitCommitButton_clicked()
-{
-    saveToFile(currentLang);
-}
-
-void MainWindow::saveToFile(QString lang)
-{
-    QFile file("global." + lang + ".xliff");
-
-    if (file.open(QFile::WriteOnly | QFile::Truncate)) {
-        QTextStream out(&file);
-
-        out.setCodec("UTF-8");
-        out << composeXliffHeader(lang);
-
-        int count = ui->translationsTable->rowCount();
-        for (int row = 0 ; row < count ; ++row) {
-            out << composeXliffBody(row, 1);
-        }
-
-        out << composeXliffFooter();
-        out.flush();
-    }
-
-    file.close();
-}
-
 QString MainWindow::composeXliffHeader(QString lang) {
     return QString("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n") +
         "<xliff xmlns=\"urn:oasis:names:tc:xliff:document:1.2\" version=\"1.2\">\n" +
@@ -174,13 +217,28 @@ QString MainWindow::composeXliffFooter() {
         "</xliff>\n";
 }
 
-void MainWindow::on_settingsAction_triggered()
+void MainWindow::getProjects()
 {
-    SettingsDialog settingsDialog;
-    int res = settingsDialog.exec();
+    QDir dir("home\\user\\www40");
 
-    if(res == 1)
+    QFileInfoList list = dir.entryInfoList();
+
+    for (int i = 0; i < list.size(); ++i)
     {
-        currentLang = settingsDialog.currentLang;
+        QFileInfo fileInfo = list.at(i);
+        if(fileInfo.fileName() != "." && fileInfo.fileName() != "..")
+            projects << fileInfo.fileName();
     }
+
+    QStringListModel *model;
+    model = new QStringListModel(this);
+    model->setStringList(projects);
+
+    ui->projectsListView->setModel(model);
+}
+
+void MainWindow::on_projectsListView_clicked(const QModelIndex &index)
+{
+    qDebug() << index;
+    qDebug() << projects.at(index.row());
 }

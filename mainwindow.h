@@ -15,14 +15,26 @@ class MainWindow : public QMainWindow
 
 public:
     explicit MainWindow(QWidget *parent = 0);
+
     void loadDataIntoTable();
-    void saveToFile(QString lang);
+    void loadDataIntoSource();
+    void saveToFileFromTable();
+    void saveToFileFromSource();
+    void getProjects();
+    QVector<LangData> getXliffData(QString lang);
     QString composeXliffHeader(QString lang);
     QString composeXliffBody(int row, int col);
     QString composeXliffFooter();
-    QVector<LangData> getXliffData(QString lang);
+
+    const int TABLE_TAB_INDEX = 0;
+    const int SOURCE_TAB_INDEX = 1;
+
     QString baseLang;
     QString currentLang;
+    QStringList projects;
+    QStringList domains;
+    QStringList branches;
+
     ~MainWindow();
 
 private slots:
@@ -33,6 +45,10 @@ private slots:
     void on_gitCommitButton_clicked();
 
     void on_settingsAction_triggered();
+
+    void on_translationsTabs_currentChanged(int index);
+
+    void on_projectsListView_clicked(const QModelIndex &index);
 
 private:
     Ui::MainWindow *ui;
