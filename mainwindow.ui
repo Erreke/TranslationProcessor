@@ -422,11 +422,53 @@
    <addaction name="menuHelp"/>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
+  <widget class="QDockWidget" name="projectsDock">
+   <property name="minimumSize">
+    <size>
+     <width>150</width>
+     <height>105</height>
+    </size>
+   </property>
+   <property name="windowTitle">
+    <string>Проекты</string>
+   </property>
+   <attribute name="dockWidgetArea">
+    <number>1</number>
+   </attribute>
+   <widget class="QWidget" name="projectsDockContents">
+    <layout class="QHBoxLayout" name="projectsDockLayout">
+     <property name="spacing">
+      <number>5</number>
+     </property>
+     <property name="leftMargin">
+      <number>5</number>
+     </property>
+     <property name="topMargin">
+      <number>5</number>
+     </property>
+     <property name="rightMargin">
+      <number>5</number>
+     </property>
+     <property name="bottomMargin">
+      <number>5</number>
+     </property>
+     <item>
+      <widget class="QListView" name="projectsListView">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+      </widget>
+     </item>
+    </layout>
+   </widget>
+  </widget>
   <widget class="QDockWidget" name="gitBranchesDock">
    <property name="minimumSize">
     <size>
      <width>183</width>
-     <height>200</height>
+     <height>210</height>
     </size>
    </property>
    <property name="floating">
@@ -465,7 +507,68 @@
       <number>0</number>
      </property>
      <item>
-      <widget class="QListView" name="gitBranchesListView"/>
+      <widget class="QTreeWidget" name="gitBranchesTree">
+       <column>
+        <property name="text">
+         <string>Ветка</string>
+        </property>
+       </column>
+       <item>
+        <property name="text">
+         <string>WWWINT</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="flags">
+         <set>ItemIsEnabled</set>
+        </property>
+        <item>
+         <property name="text">
+          <string>WWWINT-75456</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>WWWINT-55668</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>WWWINT-56565</string>
+         </property>
+        </item>
+       </item>
+       <item>
+        <property name="text">
+         <string>WWWSV</string>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>12</pointsize>
+          <weight>75</weight>
+          <bold>true</bold>
+         </font>
+        </property>
+        <property name="flags">
+         <set>ItemIsEnabled</set>
+        </property>
+        <item>
+         <property name="text">
+          <string>WWWSV-12363</string>
+         </property>
+        </item>
+        <item>
+         <property name="text">
+          <string>WWWSV-56356</string>
+         </property>
+        </item>
+       </item>
+      </widget>
      </item>
      <item>
       <widget class="QWidget" name="gitBranchesButtonsContainer" native="true">
@@ -545,7 +648,7 @@
    <property name="minimumSize">
     <size>
      <width>150</width>
-     <height>113</height>
+     <height>105</height>
     </size>
    </property>
    <property name="floating">
@@ -578,7 +681,13 @@
       <number>5</number>
      </property>
      <item>
-      <widget class="QListView" name="domainsListView"/>
+      <widget class="QListView" name="domainsListView">
+       <property name="font">
+        <font>
+         <pointsize>12</pointsize>
+        </font>
+       </property>
+      </widget>
      </item>
     </layout>
    </widget>
@@ -633,42 +742,6 @@ p, li { white-space: pre-wrap; }
        </property>
        <property name="searchPaths">
         <stringlist/>
-       </property>
-      </widget>
-     </item>
-    </layout>
-   </widget>
-  </widget>
-  <widget class="QDockWidget" name="projectsDock">
-   <property name="windowTitle">
-    <string>Проекты</string>
-   </property>
-   <attribute name="dockWidgetArea">
-    <number>1</number>
-   </attribute>
-   <widget class="QWidget" name="projectsDockContents">
-    <layout class="QHBoxLayout" name="projectsDockLayout">
-     <property name="spacing">
-      <number>5</number>
-     </property>
-     <property name="leftMargin">
-      <number>5</number>
-     </property>
-     <property name="topMargin">
-      <number>5</number>
-     </property>
-     <property name="rightMargin">
-      <number>5</number>
-     </property>
-     <property name="bottomMargin">
-      <number>5</number>
-     </property>
-     <item>
-      <widget class="QListView" name="projectsListView">
-       <property name="font">
-        <font>
-         <pointsize>12</pointsize>
-        </font>
        </property>
       </widget>
      </item>

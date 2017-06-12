@@ -28,6 +28,8 @@ MainWindow::MainWindow(QWidget *parent) :
     ui->appLogsDock->close();
 
     getProjects();
+    getDomains();
+    getGitBranches();
 }
 
 MainWindow::~MainWindow()
@@ -234,11 +236,54 @@ void MainWindow::getProjects()
     model = new QStringListModel(this);
     model->setStringList(projects);
 
+    currentProject = projects.at(0);
     ui->projectsListView->setModel(model);
+}
+
+void MainWindow::getDomains()
+{
+    QDir dir("home\\user\\www40\\" + currentProject + "\\app\\Resources\\translations\\");
+
+    QFileInfoList list = dir.entryInfoList();
+
+    for (int i = 0; i < list.size(); ++i)
+    {
+        QFileInfo fileInfo = list.at(i);
+        if(fileInfo.fileName() != "." && fileInfo.fileName() != "..")
+            domains << fileInfo.fileName();
+    }
+
+    QStringListModel *model;
+    model = new QStringListModel(this);
+    model->setStringList(domains);
+
+    currentDomain = domains.at(0);
+    ui->domainsListView->setModel(model);
+}
+
+void MainWindow::getGitBranches()
+{
+    gitBranches << "WWWSV-4568";
+    gitBranches << "WWWSV-1123";
+    gitBranches << "WWWSV-4895";
+    gitBranches << "WWWSV-4566";
+    gitBranches << "WWWSVM-123";
+    gitBranches << "WWWSVM-456";
+    gitBranches << "WWWSVM-459";
+    gitBranches << "WWWINT-1223";
+    gitBranches << "WWWINT-4566";
+    gitBranches << "WWWINT-5686";
+
+    QStringListModel *model;
+    model = new QStringListModel(this);
+    model->setStringList(gitBranches);
+
+    currentGitBranch = gitBranches.at(0);
+    //ui->gitBranchesListView->setModel(model);
 }
 
 void MainWindow::on_projectsListView_clicked(const QModelIndex &index)
 {
-    qDebug() << index;
     qDebug() << projects.at(index.row());
+    currentProject = projects.at(index.row());
 }

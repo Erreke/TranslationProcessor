@@ -21,6 +21,8 @@ public:
     void saveToFileFromTable();
     void saveToFileFromSource();
     void getProjects();
+    void getDomains();
+    void getGitBranches();
     QVector<LangData> getXliffData(QString lang);
     QString composeXliffHeader(QString lang);
     QString composeXliffBody(int row, int col);
@@ -31,9 +33,12 @@ public:
 
     QString baseLang;
     QString currentLang;
+    QString currentProject;
+    QString currentDomain;
+    QString currentGitBranch;
     QStringList projects;
     QStringList domains;
-    QStringList branches;
+    QStringList gitBranches;
 
     ~MainWindow();
 
